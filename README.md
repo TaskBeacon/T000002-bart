@@ -1,5 +1,7 @@
 # Balloon Analogue Risk Task (BART)
 
+![Maturity: smoke_tested](https://img.shields.io/badge/Maturity-smoke_tested-d97706?style=for-the-badge&labelColor=c2410c)
+
 | Field                | Value                        |
 |----------------------|------------------------------|
 | Name                 | Balloon Analogue Risk Task (BART) |

@@ -1,0 +1,11 @@
+id: T000002
+slug: bart
+title: "Balloon Analogue Risk Task (BART)"
+acquisition: eeg
+variant: baseline
+cognitive_domain: []
+maturity: smoke_tested
+version:
+  release_tag: ""
+evidence: []
+maintainer: []
