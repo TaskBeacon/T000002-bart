@@ -4,7 +4,7 @@
 |----------------------|------------------------------|
 | Name                 | Balloon Analogue Risk Task (BART) |
 | Version              | main (1.0)                          |
-| URL / Repository     | https://github.com/TaskBeacon/BART  |
+| URL / Repository     | https://github.com/TaskBeacon/T000002-bart  |
 | Short Description    | A task measuring risk-taking behavior using the classic BART paradigm. |
 | Created By           | Zhipeng Cao (zhipeng30@foxmail.com)   |
 | Date Updated         | 2025/07/24                |
@@ -102,4 +102,4 @@ Crucially, each balloon had a predetermined, randomly selected explosion point, 
 
 The task is based on the original design by Lejuez and colleagues:
 
-> Lejuez, C. W., Read, J. P., Kahler, C. W., Richards, J. B., Ramsey, S. E., Stuart, G. L., ... & Brown, R. A. (2002). Evaluation of a behavioral measure of risk taking: the Balloon Analogue Risk Task (BART). *Journal of Experimental Psychology: Applied, 8*(2), 75â€“84. https://doi.org/10.1037/1076-898X.8.2.75
+> Lejuez, C. W., Read, J. P., Kahler, C. W., Richards, J. B., Ramsey, S. E., Stuart, G. L., ... & Brown, R. A. (2002). Evaluation of a behavioral measure of risk taking: the Balloon Analogue Risk Task (BART). *Journal of Experimental Psychology: Applied, 8*(2), 75â€?4. https://doi.org/10.1037/1076-898X.8.2.75
