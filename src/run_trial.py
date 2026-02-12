@@ -1,8 +1,8 @@
-from psyflow import StimUnit
+﻿from psyflow import StimUnit
 import random
 from functools import partial
 from psychopy.visual import TextStim
-def run_trial(win, kb, settings, condition, stim_bank, trigger_sender):
+def run_trial(win, kb, settings, condition, stim_bank, trigger_runtime):
     """
     Run a single BART trial using the Lejuez et al. (2002) method:
     A predetermined explosion point is set for each balloon.
@@ -10,7 +10,7 @@ def run_trial(win, kb, settings, condition, stim_bank, trigger_sender):
 balloon + pump + feedback
     """
     trial_data = {"condition": condition}
-    make_unit = partial(StimUnit, win=win, kb=kb,  triggersender=trigger_sender)
+    make_unit = partial(StimUnit, win=win, kb=kb,  runtime=trigger_runtime)
     continue_pump = True
     pump_count    = 0
     score_bank    = getattr(settings, f"{condition}_delta")
