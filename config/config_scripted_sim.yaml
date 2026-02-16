@@ -1,4 +1,4 @@
-# config.yaml
+﻿# config.yaml
 # === Subject info ===
 subinfo_fields:
   - name: subject_id
@@ -47,18 +47,18 @@ window:
 # === Task-level settings ===
 task:
   task_name: eeg_BART
-  save_path: ./outputs/human
+  save_path: ./outputs/sim
   language: "Chinese"
   voice_name: "zh-CN-YunyangNeural"
-  total_blocks: 2
-  total_trials: 10
-  trial_per_block: 5
+  total_blocks: 1
+  total_trials: 9
+  trial_per_block: 9
   conditions: [blue, yellow, orange]
   key_list: [space, right]
   pump_key: space
   cash_key: right
   delta: 0.0
-  voice_enabled: true
+  voice_enabled: false
   seed_mode: "same_across_sub"
   blue_max_pumps: 24
   blue_delta: 5
@@ -240,4 +240,18 @@ triggers:
   timing:
     post_delay_s: 0.001
 
+sim:
+  output_dir: outputs/sim
+  seed: 0
+  participant_id: sim001
+  session_id: sub-sim001_task-eeg_BART_seed0
+  log_path: outputs/sim/sub-sim001_task-eeg_BART_seed0_sim_events.jsonl
+  policy: warn
+  default_rt_s: 0.2
+  clamp_rt: false
+  responder:
+    type: scripted
+    kwargs:
+      key: space
+      rt_s: 0.45
 
