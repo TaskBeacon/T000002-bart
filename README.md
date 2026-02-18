@@ -52,6 +52,12 @@ This implementation uses the robust, predetermined explosion point method descri
 |                     | 3. **Timeout:** If no response is made, the trial ends with no points.        |
 | Feedback            | Feedback is shown indicating the outcome and points gained or lost.         |
 
+### Runtime Context Phases
+| Phase Label | Meaning |
+|---|---|
+| `pre_pump_fixation` | pre pump fixation stage in `src/run_trial.py` responder context. |
+| `pump_decision` | pump decision stage in `src/run_trial.py` responder context. |
+
 ## 3. Configuration Summary (`config.yaml`)
 
 ### a. Task Settings
@@ -94,7 +100,7 @@ This implementation uses the robust, predetermined explosion point method descri
 | response_feedback_duration | 1.0              |
 | feedback_duration      | 1.0                |
 
-## 4. Methods
+## 4. Methods (for academic publication)
 
 Participants performed a computerized Balloon Analogue Risk Task (BART) to assess risk-taking behavior. The task consisted of **2 blocks**, each comprising **5 trials**, for a total of **10 trials**. In each trial, participants were presented with a colored balloon (orange, yellow, or blue). They could repeatedly press the **spacebar** to inflate the balloon, accumulating points with each pump. The number of points earned per pump varied by balloon color. 
 
@@ -104,4 +110,4 @@ Crucially, each balloon had a predetermined, randomly selected explosion point, 
 
 The task is based on the original design by Lejuez and colleagues:
 
-> Lejuez, C. W., Read, J. P., Kahler, C. W., Richards, J. B., Ramsey, S. E., Stuart, G. L., ... & Brown, R. A. (2002). Evaluation of a behavioral measure of risk taking: the Balloon Analogue Risk Task (BART). *Journal of Experimental Psychology: Applied, 8*(2), 75â€?4. https://doi.org/10.1037/1076-898X.8.2.75
+> Lejuez, C. W., Read, J. P., Kahler, C. W., Richards, J. B., Ramsey, S. E., Stuart, G. L., ... & Brown, R. A. (2002). Evaluation of a behavioral measure of risk taking: the Balloon Analogue Risk Task (BART). *Journal of Experimental Psychology: Applied, 8*(2), 75?4. https://doi.org/10.1037/1076-898X.8.2.75

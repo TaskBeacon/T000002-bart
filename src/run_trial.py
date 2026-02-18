@@ -5,7 +5,7 @@ from psychopy.visual import TextStim
 
 from psyflow import StimUnit, set_trial_context
 
-# trial stages in contract order: cue -> anticipation -> target -> feedback
+# trial stages use task-specific phase labels via set_trial_context(...)
 _TRIAL_COUNTER = 0
 
 
@@ -54,23 +54,23 @@ def run_trial(
     explosion_point = random.randint(1, max_pumps)
     trial_data["explosion_point"] = explosion_point
 
-    # cue
-    # anticipation
+    # phase: pre_pump_fixation
+    # phase: pre_pump_fixation
     fixation = make_unit(unit_label="fixation").add_stim(stim_bank.get("fixation"))
     set_trial_context(
         fixation,
         trial_id=trial_id,
-        phase="anticipation",
+        phase="pre_pump_fixation",
         deadline_s=_deadline_s(settings.fixation_duration),
         valid_keys=[settings.pump_key, settings.cash_key],
         block_id=block_id,
         condition_id=str(condition),
-        task_factors={"condition": str(condition), "stage": "fixation", "block_idx": block_idx},
+        task_factors={"condition": str(condition), "stage": "pre_pump_fixation", "block_idx": block_idx},
         stim_id="fixation",
     )
     fixation.show(duration=settings.fixation_duration, onset_trigger=settings.triggers.get("fixation_onset")).to_dict(trial_data)
 
-    # target
+    # phase: pump_decision
     while continue_pump:
         current_scale = initial_scale + pump_count * size_step
         balloon_size = [current_scale * balloon_base_deg[0], current_scale * balloon_base_deg[1]]
@@ -81,14 +81,14 @@ def run_trial(
         set_trial_context(
             balloon,
             trial_id=trial_id,
-            phase="target",
+            phase="pump_decision",
             deadline_s=_deadline_s(settings.balloon_duration),
             valid_keys=[settings.pump_key, settings.cash_key],
             block_id=block_id,
             condition_id=str(condition),
             task_factors={
                 "condition": str(condition),
-                "stage": "pump",
+                "stage": "pump_decision",
                 "pump_count": int(pump_count),
                 "score_bank": float(score_bank),
                 "block_idx": block_idx,
@@ -139,7 +139,7 @@ def run_trial(
             fb_type = "timeout"
             fb_score = 0
 
-    # feedback
+    # outcome display
     fb_stim = "win_feedback" if fb_type == "cash" else "lose_feedback"
     feedback = make_unit(unit_label="feedback").add_stim(stim_bank.get_and_format(fb_stim, fb_score=fb_score)).show(
         duration=settings.feedback_duration,
