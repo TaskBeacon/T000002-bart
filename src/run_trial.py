@@ -3,29 +3,9 @@ from functools import partial
 
 from psychopy.visual import TextStim
 
-from psyflow import StimUnit, set_trial_context
+from psyflow import StimUnit, set_trial_context, next_trial_id
 
 # trial stages use task-specific phase labels via set_trial_context(...)
-_TRIAL_COUNTER = 0
-
-
-def _next_trial_id() -> int:
-    global _TRIAL_COUNTER
-    _TRIAL_COUNTER += 1
-    return _TRIAL_COUNTER
-
-
-def _deadline_s(value) -> float | None:
-    if isinstance(value, (int, float)):
-        return float(value)
-    if isinstance(value, (list, tuple)) and value:
-        try:
-            return float(max(value))
-        except Exception:
-            return None
-    return None
-
-
 def run_trial(
     win,
     kb,
@@ -37,7 +17,7 @@ def run_trial(
     block_idx=None,
 ):
     """Run a single BART trial with a predetermined explosion point."""
-    trial_id = _next_trial_id()
+    trial_id = next_trial_id()
     trial_data = {"condition": condition}
     make_unit = partial(StimUnit, win=win, kb=kb, runtime=trigger_runtime)
 
@@ -61,7 +41,7 @@ def run_trial(
         fixation,
         trial_id=trial_id,
         phase="pre_pump_fixation",
-        deadline_s=_deadline_s(settings.fixation_duration),
+        deadline_s=settings.fixation_duration,
         valid_keys=[settings.pump_key, settings.cash_key],
         block_id=block_id,
         condition_id=str(condition),
@@ -82,7 +62,7 @@ def run_trial(
             balloon,
             trial_id=trial_id,
             phase="pump_decision",
-            deadline_s=_deadline_s(settings.balloon_duration),
+            deadline_s=settings.balloon_duration,
             valid_keys=[settings.pump_key, settings.cash_key],
             block_id=block_id,
             condition_id=str(condition),

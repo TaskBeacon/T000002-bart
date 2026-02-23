@@ -2,6 +2,13 @@
 
 All notable development changes for T000002-bart are documented here.
 
+## [1.1.2] - 2026-02-23
+
+### Changed
+- Removed redundant `_TRIAL_COUNTER` and `_next_trial_id()` manually defined boilerplate in favor of native `psyflow.next_trial_id` synchronization.
+- Removed redundant duration resolver (`_deadline_s()`) locally, since duration array parsing is now safely handled natively inside `set_trial_context(...)`.
+- Refactored `src/run_trial.py` to maintain decoupled generalized tracking from `psyflow`.
+
 ## [1.1.1] - 2026-02-18
 
 ### Changed
