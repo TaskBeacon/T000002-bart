@@ -1,4 +1,4 @@
-# config.yaml
+﻿# config_qa.yaml
 # === Subject info ===
 subinfo_fields:
   - name: subject_id
@@ -8,11 +8,10 @@ subinfo_fields:
       max: 999
       digits: 3
 
-
-  - name: subname    
+  - name: subname
     type: string
 
-  - name: age 
+  - name: age
     type: int
     constraints:
       min: 5
@@ -23,16 +22,15 @@ subinfo_fields:
     choices: [Male, Female]
 
 subinfo_mapping:
-    subject_id: "被试号"
-    subname: "被试姓名(拼音)"
-    age: "年龄"
-    gender: "性别"
-    Male: "男"
-    Female: "女"
-    registration_failed: "注册失败。"
-    registration_successful: "注册成功！"
-    invalid_input: "字段 {field} 输入无效"
-
+  subject_id: "被试号"
+  subname: "被试姓名(拼音)"
+  age: "年龄"
+  gender: "性别"
+  Male: "男"
+  Female: "女"
+  registration_failed: "注册失败。"
+  registration_successful: "注册成功！"
+  invalid_input: "字段 {field} 输入无效"
 
 # === Window settings ===
 window:
@@ -59,7 +57,10 @@ task:
   cash_key: right
   delta: 0.0
   voice_enabled: false
-  seed_mode: "same_across_sub"
+  seed_mode: same_across_sub
+  explosion_sampling_mode: without_replacement_cycle
+  decision_timeout_enabled: true
+  decision_timeout_fallback_s: 10.0
   blue_max_pumps: 24
   blue_delta: 5
   orange_max_pumps: 6
@@ -68,10 +69,9 @@ task:
   yellow_delta: 10
   max_balloon_scale: 1
   initial_balloon_scale: 0.2
-  balloon_size_deg: [4,5]
+  balloon_size_deg: [4, 5]
 
-
-# === Stimuli (for MID task) ===
+# === Stimuli ===
 stimuli:
   fixation:
     type: text
@@ -91,8 +91,8 @@ stimuli:
     image: ./assets/orange_balloon.png
 
   blue_pop:
-   type: image
-   image: ./assets/blue_pop.png
+    type: image
+    image: ./assets/blue_pop.png
 
   yellow_pop:
     type: image
@@ -102,12 +102,18 @@ stimuli:
     type: image
     image: ./assets/orange_pop.png
 
+  score_bank_text:
+    type: text
+    text: "+{score_bank}"
+    color: white
+    pos: [0, -4]
+
   cash_screen:
     type: text
     text: "拿走分数"
     color: green
 
-  timeout_screen: 
+  timeout_screen:
     type: text
     text: "请及时按键"
     color: red
@@ -115,25 +121,20 @@ stimuli:
   pop_sound:
     type: sound
     file: ./assets/pop.ogg
-  
-  
+
   cash_sound:
     type: sound
     file: ./assets/cash_fixed.ogg
 
-
-  
   block_break:
     type: text
     text: |
       第 {block_num} / {total_blocks} 部分完成
       总分：{total_score}
-      
+
       请在充分休息后按下空格键
       进入下一个部分
     color: white
-
-
 
   instruction_text:
     type: textbox
@@ -154,48 +155,37 @@ stimuli:
       不同颜色的气球，爆炸的风险可能不同。
       请您在追求高分和避免风险之间做出权衡。
 
-      按【空格键】开始游戏，
-      祝您好运！
- 
+      按【空格键】开始游戏，祝您好运！
     color: white
     font: SimHei
     alignment: center
     letterHeight: 0.78
- 
+
   win_feedback:
     type: text
-    text: 
-      获得：{fb_score}分
+    text: "获得：{fb_score}分"
     color: green
-  
-   
+
   lose_feedback:
     type: text
-    text: 
-      获得：{fb_score}分
+    text: "获得：{fb_score}分"
     color: red
-
 
   good_bye:
     type: text
     text: |
       任务结束
-      最后得分:{total_score}
+      最后得分：{total_score}
       感谢您的参与
       请按【空格键】键退出
     color: white
 
-
-# === Timing & Adaptivity ===
+# === Timing ===
 timing:
   fixation_duration: 0.8
-  response_feedback_duration: 1
-  balloon_duration: 2
-  feedback_duration: 1
-  
-  
-
-
+  response_feedback_duration: 1.0
+  balloon_duration: 2.0
+  feedback_duration: 1.0
 
 triggers:
   map:

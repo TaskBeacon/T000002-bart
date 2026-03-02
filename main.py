@@ -87,7 +87,10 @@ def run(options: TaskRunOptions):
         )
         if bool(getattr(settings, "voice_enabled", True)) and options.mode not in ("qa", "sim"):
             instruction.add_stim(stim_bank.get("instruction_text_voice"))
-        instruction.wait_and_continue()
+        if options.mode in ("qa", "sim"):
+            instruction.show(duration=0.2)
+        else:
+            instruction.wait_and_continue()
 
         all_data = []
         for block_i in range(settings.total_blocks):
@@ -115,19 +118,27 @@ def run(options: TaskRunOptions):
 
             block_trials = block.get_all_data()
             total_score = sum(trial.get("feedback_fb_score", 0) for trial in block_trials)
-            StimUnit("block", win, kb, runtime=trigger_runtime).add_stim(
+            block_break = StimUnit("block", win, kb, runtime=trigger_runtime).add_stim(
                 stim_bank.get_and_format(
                     "block_break",
                     block_num=block_i + 1,
                     total_blocks=settings.total_blocks,
                     total_score=total_score,
                 )
-            ).wait_and_continue()
+            )
+            if options.mode in ("qa", "sim"):
+                block_break.show(duration=0.2)
+            else:
+                block_break.wait_and_continue()
 
         final_score = sum(trial.get("feedback_fb_score", 0) for trial in all_data)
-        StimUnit("block", win, kb, runtime=trigger_runtime).add_stim(
+        goodbye = StimUnit("block", win, kb, runtime=trigger_runtime).add_stim(
             stim_bank.get_and_format("good_bye", total_score=final_score)
-        ).wait_and_continue(terminate=True)
+        )
+        if options.mode in ("qa", "sim"):
+            goodbye.show(duration=0.2)
+        else:
+            goodbye.wait_and_continue(terminate=True)
 
         trigger_runtime.send(settings.triggers.get("exp_end"))
 

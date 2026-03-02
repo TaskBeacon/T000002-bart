@@ -1,4 +1,4 @@
-# Task Logic Audit: Balloon Analogue Risk Task (BART)
+﻿# Task Logic Audit: Balloon Analogue Risk Task (BART)
 
 ## 1. Paradigm Intent
 
@@ -22,39 +22,40 @@
 ### Block Structure
 
 - Total blocks:
-  - Human config: `2`
+  - Human config: `3`
   - QA/sim configs: `1`
 - Trials per block:
-  - Human config: `5`
+  - Human config: `10`
   - QA/sim configs: `9`
 - Randomization/counterbalancing:
-  - Uses built-in `BlockUnit.generate_conditions()` with condition labels from `task.conditions`.
-  - No explicit `condition_weights` is currently defined, so generation is equal-weight by default.
+  - Built-in `BlockUnit.generate_conditions()` with equal-weight condition labels.
 - Condition generation method:
   - Built-in generator (`BlockUnit.generate_conditions(...)`), no custom generator.
 - Runtime-generated trial values:
-  - `explosion_point` is generated in `src/run_trial.py` using `random.randint(1, max_pumps)` each trial.
-  - This draw is not explicitly linked to block/trial seed values, so exact burst sequences are not fully reproducible.
+  - `explosion_point` is generated in `src/run_trial.py` with deterministic per-block/per-condition sampler.
+  - Sampling mode is config-driven via `task.explosion_sampling_mode` (`without_replacement_cycle` by default).
 
 ### Trial State Machine
 
 1. State name: `pre_pump_fixation`
    - Onset trigger: `fixation_onset`
    - Stimuli shown: `fixation`
-   - Valid keys: `pump_key`, `cash_key` are context-declared; response not captured in this state
+   - Valid keys: `pump_key`, `cash_key` are context-declared
    - Timeout behavior: fixed duration (`fixation_duration`)
    - Next state: `pump_decision`
 
 2. State name: `pump_decision` (looped)
    - Onset trigger: `{condition}_balloon_onset`
-   - Stimuli shown: `{condition}_balloon` + dynamic score text
+   - Stimuli shown: `{condition}_balloon` + `score_bank_text`
    - Valid keys: `pump_key`, `cash_key`
-   - Timeout behavior: end decision loop on deadline (`balloon_duration`) and branch to timeout outcome
+   - Timeout behavior:
+     - Human default: no planned timeout (`decision_timeout_enabled=false`)
+     - QA/SIM: bounded window (`balloon_duration`) with `{condition}_timeout`
    - Next state:
      - `pump_decision` (if pump and no explosion)
-     - `outcome_pop` (if pump reaches/exceeds explosion point)
+     - `outcome_pop` (if pump reaches explosion point)
      - `outcome_cash` (if cash key pressed)
-     - `outcome_timeout` (if no response)
+     - `outcome_timeout` (if no response in bounded mode)
 
 3. State name: `outcome_pop` / `outcome_cash` / `outcome_timeout`
    - Onset trigger: condition-specific outcome trigger
@@ -76,7 +77,7 @@
 ## 3. Condition Semantics
 
 - Condition ID: `blue`
-  - Participant-facing meaning: lowest-risk balloon class in this implementation.
+  - Participant-facing meaning: low-risk balloon class in this implementation.
   - Concrete stimulus realization: `stimuli.blue_balloon`, `stimuli.blue_pop`.
   - Outcome rules: `blue_max_pumps=24`, `blue_delta=5`.
 
@@ -86,16 +87,15 @@
   - Outcome rules: `yellow_max_pumps=12`, `yellow_delta=10`.
 
 - Condition ID: `orange`
-  - Participant-facing meaning: highest-risk balloon class.
+  - Participant-facing meaning: high-risk balloon class.
   - Concrete stimulus realization: `stimuli.orange_balloon`, `stimuli.orange_pop`.
   - Outcome rules: `orange_max_pumps=6`, `orange_delta=20`.
 
 Participant-facing text/stimulus source:
 
-- Participant-facing text source: mostly `config/*.yaml -> stimuli.*`
-- Why this source is appropriate for auditability: wording is centralized and visible in config.
-- Localization strategy: language-specific text can be swapped in config without editing code.
-- Current exception: dynamic per-pump score text (`TextStim(text=f"+{score_bank}")`) is generated in `src/run_trial.py`.
+- Participant-facing text source: `config/*.yaml -> stimuli.*`
+- Why this source is appropriate for auditability: wording and labels are centralized in config.
+- Localization strategy: language variants can be swapped via config without code edits.
 
 ## 4. Response and Scoring Rules
 
@@ -105,46 +105,46 @@ Participant-facing text/stimulus source:
 - Response key source:
   - Config-driven (`task.pump_key`, `task.cash_key`, `task.key_list`)
 - Missing-response policy:
-  - Timeout branch when no key before `balloon_duration`
+  - QA/SIM bounded mode can branch to timeout.
+  - Human default is unbounded decision policy (`decision_timeout_enabled=false`).
 - Correctness logic:
-  - No hit/error correctness label; outcomes are `pop`, `cash`, `timeout`.
+  - No hit/error classification; outcomes are `pop`, `cash`, `timeout`.
 - Reward/penalty updates:
-  - Current implementation initializes `score_bank` to condition delta before first pump.
-  - On successful pump without explosion, `score_bank += delta`.
-  - Pop sets trial score to `0`; cash sets trial score to current `score_bank`.
+  - `score_bank` starts at `0`.
+  - Successful non-explosive pump adds `delta`.
+  - Pop sets trial score to `0`; cash uses current `score_bank`.
 - Running metrics:
-  - Per-trial `feedback_fb_score` logged; block and final score computed as sums.
-  - Adjusted-pump metric (canonical BART analysis metric) is not computed in runtime.
+  - Per-trial `feedback_fb_score` logged; block/final score computed by sum.
 
 ## 5. Stimulus Layout Plan
 
 - Screen name: `pre_pump_fixation`
   - Stimulus IDs shown together: `fixation`
   - Layout anchors (`pos`): center
-  - Size/spacing: default text size for fixation
-  - Readability/overlap checks: minimal screen load
-  - Rationale: baseline visual anchor before decision loop
+  - Size/spacing: default text size
+  - Readability/overlap checks: minimal load
+  - Rationale: pre-decision visual anchor
 
 - Screen name: `pump_decision`
-  - Stimulus IDs shown together: `{condition}_balloon`, dynamic score text
-  - Layout anchors (`pos`): balloon default center; score text at `[0, -4]` (deg units)
+  - Stimulus IDs shown together: `{condition}_balloon`, `score_bank_text`
+  - Layout anchors (`pos`): balloon centered, score text at config-defined lower position
   - Size/spacing: balloon scales from `initial_balloon_scale` to `max_balloon_scale`
-  - Readability/overlap checks: score text remains below balloon footprint
-  - Rationale: continuous risk accumulation visualization
+  - Readability/overlap checks: score text kept below balloon centerline
+  - Rationale: explicit visualization of temporary reward growth and risk progression
 
 - Screen name: `outcome_pop` / `outcome_cash` / `outcome_timeout`
-  - Stimulus IDs shown together: outcome image/text + optional sound
-  - Layout anchors (`pos`): centered outcome feedback
-  - Size/spacing: brief fixed-duration presentation
-  - Readability/overlap checks: single message per outcome state
-  - Rationale: explicit outcome transition before summary feedback
+  - Stimulus IDs shown together: outcome visual/text + optional sound
+  - Layout anchors (`pos`): centered
+  - Size/spacing: brief fixed-duration display
+  - Readability/overlap checks: single outcome message per stage
+  - Rationale: explicit state transition feedback
 
 - Screen name: `feedback`
   - Stimulus IDs shown together: `win_feedback` or `lose_feedback`
   - Layout anchors (`pos`): centered text
-  - Size/spacing: fixed feedback duration
-  - Readability/overlap checks: high contrast text color
-  - Rationale: communicates trial-level gain/loss score
+  - Size/spacing: fixed `feedback_duration`
+  - Readability/overlap checks: high-contrast color coding
+  - Rationale: trial-level score reporting
 
 ## 6. Trigger Plan
 
@@ -155,9 +155,7 @@ Participant-facing text/stimulus source:
 | `block_onset` | 100 | block start |
 | `block_end` | 101 | block end |
 | `fixation_onset` | 1 | fixation onset |
-| `blue_balloon_onset` | 36 | blue decision onset |
-| `yellow_balloon_onset` | 16 | yellow decision onset |
-| `orange_balloon_onset` | 26 | orange decision onset |
+| `blue_balloon_onset` / `yellow_balloon_onset` / `orange_balloon_onset` | 36 / 16 / 26 | decision onset by condition |
 | `blue_pump_press` / `yellow_pump_press` / `orange_pump_press` | 34 / 14 / 24 | pump key press |
 | `blue_cash_press` / `yellow_cash_press` / `orange_cash_press` | 35 / 15 / 25 | cash key press |
 | `blue_pop` / `yellow_pop` / `orange_pop` | 31 / 11 / 21 | explosion outcome onset |
@@ -168,30 +166,26 @@ Participant-facing text/stimulus source:
 ## 7. Architecture Decisions (Auditability)
 
 - `main.py` runtime flow style:
-  - Single mode-aware execution path (`human`, `qa`, `sim`) with shared setup and block loop.
+  - One mode-aware flow (`human`, `qa`, `sim`) with shared setup and block loop.
 - `utils.py` used?
-  - No task-level utils module in this task.
+  - No task-level utils module.
 - Custom controller used?
-  - No. Task uses `BlockUnit.generate_conditions(...)` + task-local `run_trial`.
+  - No; uses `BlockUnit.generate_conditions(...)` and task-local `run_trial`.
 - Why PsyFlow-native path is sufficient:
-  - Condition scheduling and trial logging fit built-in `BlockUnit` and `StimUnit` abstractions.
+  - Built-in block scheduling and `StimUnit` response capture support required flow.
 - Legacy/backward-compatibility fallback logic required?
-  - No explicit fallback branches in T000002 runtime.
+  - No explicit legacy branch.
 
 ## 8. Inference Log
 
-- Decision: treat `orange` as high-risk color class analogous to red-coded variants.
-  - Why inference was required: selected references use differing color labels across variants.
-  - Citation-supported rationale: `W2005240523` documents color-coded risk classes in modified BART.
+- Decision: keep three color conditions (`blue`, `yellow`, `orange`) with task-specific risk ranges.
+  - Why inference was required: references use variant-specific color/range sets.
+  - Citation-supported rationale: `W2005240523` modified BART color-condition workflow.
 
-- Decision: mark current `total_trials=10` and `2s` response deadline as protocol adaptations.
-  - Why inference was required: canonical protocol often uses larger trial counts and self-paced decisions.
-  - Citation-supported rationale: `W2146196757` canonical task structure and contingency logic.
+- Decision: human profile set to 30 total trials; QA/SIM remain reduced.
+  - Why inference was required: QA/SIM runtime constraints conflict with full protocol length.
+  - Citation-supported rationale: canonical BART literature emphasizes larger trial counts (`W2146196757`).
 
-- Decision: flag explosion sampling implementation for manual review.
-  - Why inference was required: current code uses per-trial independent RNG, while modified protocol literature describes bounded lists sampled without replacement.
-  - Citation-supported rationale: `W2005240523` modified BART sampling description.
-
-- Decision: flag score-bank initialization for manual review.
-  - Why inference was required: current implementation starts temporary bank above zero before first successful pump.
-  - Citation-supported rationale: `W2146196757` pump action is the mechanism that accrues temporary reward.
+- Decision: bounded timeout kept for QA/SIM but disabled for default human run.
+  - Why inference was required: automation needs bounded waits; canonical human protocol is typically self-paced.
+  - Citation-supported rationale: `W2146196757` contingency logic and canonical task framing.
