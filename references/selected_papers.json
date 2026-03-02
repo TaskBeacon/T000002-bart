@@ -1,0 +1,77 @@
+[
+  {
+    "id": "W2146196757",
+    "title": "Evaluation of a behavioral measure of risk taking: The Balloon Analogue Risk Task (BART).",
+    "authors": [
+      "C. W. Lejuez",
+      "J. P. Read",
+      "C. W. Kahler",
+      "J. B. Richards",
+      "S. E. Ramsey",
+      "G. L. Stuart",
+      "D. R. Strong",
+      "R. A. Brown"
+    ],
+    "year": 2002,
+    "journal": "Journal of Experimental Psychology Applied",
+    "doi_or_url": "https://doi.org/10.1037/1076-898X.8.2.75",
+    "citation_count": 2148,
+    "is_high_impact": true,
+    "open_access": false,
+    "used_for": [
+      "task_workflow",
+      "scoring_rules",
+      "dependent_measures"
+    ],
+    "parameter_bindings": {},
+    "notes": "Canonical BART reference for trial contingency and behavioral outputs."
+  },
+  {
+    "id": "W2029537564",
+    "title": "The balloon analogue risk task (BART) differentiates smokers and nonsmokers.",
+    "authors": [
+      "C. W. Lejuez",
+      "J. P. Aklin",
+      "A. Daughters",
+      "D. M. Zvolensky",
+      "K. S. Kahler",
+      "M. Gwadz"
+    ],
+    "year": 2003,
+    "journal": "Experimental and Clinical Psychopharmacology",
+    "doi_or_url": "https://doi.org/10.1037/1064-1297.11.1.26",
+    "citation_count": 514,
+    "is_high_impact": false,
+    "open_access": false,
+    "used_for": [
+      "dependent_measures",
+      "validity_evidence"
+    ],
+    "parameter_bindings": {},
+    "notes": "Supports adjusted-pump style interpretation and external validity usage."
+  },
+  {
+    "id": "W2005240523",
+    "title": "Neural correlates of voluntary and involuntary risk taking in the human brain: An fMRI Study of the Balloon Analog Risk Task.",
+    "authors": [
+      "H. Rao",
+      "A. M. Korczykowski",
+      "J. Pluta",
+      "D. C. Hoang",
+      "J. A. Detre"
+    ],
+    "year": 2008,
+    "journal": "NeuroImage",
+    "doi_or_url": "https://doi.org/10.1016/j.neuroimage.2008.05.046",
+    "citation_count": 352,
+    "is_high_impact": true,
+    "open_access": true,
+    "used_for": [
+      "condition_semantics",
+      "sampling_rules",
+      "timing_structure"
+    ],
+    "parameter_bindings": {},
+    "notes": "Provides a documented modified BART variant with explicit color/risk structure."
+  }
+]

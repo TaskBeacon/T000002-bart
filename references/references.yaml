@@ -1,0 +1,40 @@
+task_id: T000002
+generated_at: "2026-03-02T07:41:12Z"
+selection_policy: manual_curation_protocol_first_with_gap_audit
+citation_threshold: 100
+papers:
+  - id: W2146196757
+    title: "Evaluation of a behavioral measure of risk taking: The Balloon Analogue Risk Task (BART)."
+    year: 2002
+    journal: "Journal of Experimental Psychology Applied"
+    doi_or_url: "https://doi.org/10.1037/1076-898X.8.2.75"
+    citation_count: 2148
+    open_access: false
+    is_high_impact: true
+    used_for:
+      - task_workflow
+      - scoring_rules
+      - dependent_measures
+  - id: W2029537564
+    title: "The balloon analogue risk task (BART) differentiates smokers and nonsmokers."
+    year: 2003
+    journal: "Experimental and Clinical Psychopharmacology"
+    doi_or_url: "https://doi.org/10.1037/1064-1297.11.1.26"
+    citation_count: 514
+    open_access: false
+    is_high_impact: false
+    used_for:
+      - dependent_measures
+      - validity_evidence
+  - id: W2005240523
+    title: "Neural correlates of voluntary and involuntary risk taking in the human brain: An fMRI Study of the Balloon Analog Risk Task."
+    year: 2008
+    journal: "NeuroImage"
+    doi_or_url: "https://doi.org/10.1016/j.neuroimage.2008.05.046"
+    citation_count: 352
+    open_access: true
+    is_high_impact: true
+    used_for:
+      - condition_semantics
+      - sampling_rules
+      - timing_structure
