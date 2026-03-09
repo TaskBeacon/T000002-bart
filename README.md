@@ -1,4 +1,4 @@
-﻿# Balloon Analogue Risk Task (BART)
+# Balloon Analogue Risk Task (BART)
 
 ![Maturity: smoke_tested](https://img.shields.io/badge/Maturity-smoke_tested-d97706?style=for-the-badge&labelColor=c2410c)
 
@@ -24,6 +24,7 @@ This implementation uses deterministic explosion sampling with config-defined mo
 
 ## 2. Task Flow
 
+![Task flow](./task_flow.png)
 ### Controller Logic
 
 - `main.py` runs one unified mode-aware flow (`human`, `qa`, `sim`).

@@ -1,4 +1,4 @@
-﻿# config.yaml
+# config.yaml
 # === Subject info ===
 subinfo_fields:
   - name: subject_id
