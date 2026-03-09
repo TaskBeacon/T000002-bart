@@ -2,6 +2,16 @@
 
 All notable development changes for T000002-bart are documented here.
 
+## [1.1.3] - 2026-03-10
+
+### Changed
+- Updated `src/run_trial.py` so every participant-visible outcome and feedback phase emits `set_trial_context(...)`, not just the response window.
+- Regenerated task-plot artifacts under `references/task_plot_*` and `task_flow.png` using the updated task-plot skill.
+
+### Fixed
+- Restored audit visibility for BART pop, cash, timeout, and feedback screens in downstream task-plot inference.
+- Updated the generated workflow figure to use participant-visible sample stimuli rather than abstract placeholders.
+
 ## [1.1.2] - 2026-02-23
 
 ### Changed

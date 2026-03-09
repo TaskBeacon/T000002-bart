@@ -1,4 +1,4 @@
-﻿import random
+import random
 from functools import partial
 
 from psyflow import StimUnit, next_trial_id, set_trial_context
@@ -144,7 +144,29 @@ def run_trial(
         if response == settings.pump_key:
             pump_count += 1
             if pump_count >= explosion_point:
-                make_unit(unit_label="pop").add_stim(stim_bank.get(f"{condition}_pop")).add_stim(stim_bank.get("pop_sound")).show(
+                pop = (
+                    make_unit(unit_label="pop")
+                    .add_stim(stim_bank.get(f"{condition}_pop"))
+                    .add_stim(stim_bank.get("pop_sound"))
+                )
+                set_trial_context(
+                    pop,
+                    trial_id=trial_id,
+                    phase="pop_outcome",
+                    deadline_s=settings.response_feedback_duration,
+                    valid_keys=[],
+                    block_id=block_id,
+                    condition_id=str(condition),
+                    task_factors={
+                        "condition": str(condition),
+                        "stage": "pop_outcome",
+                        "pump_count": int(pump_count),
+                        "score_bank": float(score_bank),
+                        "block_idx": block_idx,
+                    },
+                    stim_id=f"{condition}_pop+pop_sound",
+                )
+                pop.show(
                     duration=settings.response_feedback_duration,
                     onset_trigger=settings.triggers.get(f"{condition}_pop"),
                 ).to_dict(trial_data)
@@ -155,7 +177,29 @@ def run_trial(
                 continue_pump = True
                 score_bank += delta
         elif response == settings.cash_key:
-            make_unit(unit_label="cash").add_stim(stim_bank.get("cash_screen")).add_stim(stim_bank.get("cash_sound")).show(
+            cash = (
+                make_unit(unit_label="cash")
+                .add_stim(stim_bank.get("cash_screen"))
+                .add_stim(stim_bank.get("cash_sound"))
+            )
+            set_trial_context(
+                cash,
+                trial_id=trial_id,
+                phase="cash_outcome",
+                deadline_s=settings.response_feedback_duration,
+                valid_keys=[],
+                block_id=block_id,
+                condition_id=str(condition),
+                task_factors={
+                    "condition": str(condition),
+                    "stage": "cash_outcome",
+                    "pump_count": int(pump_count),
+                    "score_bank": float(score_bank),
+                    "block_idx": block_idx,
+                },
+                stim_id="cash_screen+cash_sound",
+            )
+            cash.show(
                 duration=settings.response_feedback_duration,
                 onset_trigger=settings.triggers.get(f"{condition}_cash"),
             ).to_dict(trial_data)
@@ -163,7 +207,25 @@ def run_trial(
             continue_pump = False
             fb_score = score_bank
         else:
-            make_unit(unit_label="timeout").add_stim(stim_bank.get("timeout_screen")).show(
+            timeout = make_unit(unit_label="timeout").add_stim(stim_bank.get("timeout_screen"))
+            set_trial_context(
+                timeout,
+                trial_id=trial_id,
+                phase="timeout_outcome",
+                deadline_s=settings.response_feedback_duration,
+                valid_keys=[],
+                block_id=block_id,
+                condition_id=str(condition),
+                task_factors={
+                    "condition": str(condition),
+                    "stage": "timeout_outcome",
+                    "pump_count": int(pump_count),
+                    "score_bank": float(score_bank),
+                    "block_idx": block_idx,
+                },
+                stim_id="timeout_screen",
+            )
+            timeout.show(
                 duration=settings.response_feedback_duration,
                 onset_trigger=settings.triggers.get(f"{condition}_timeout"),
             ).to_dict(trial_data)
@@ -173,7 +235,26 @@ def run_trial(
 
     # outcome display
     fb_stim = "win_feedback" if fb_type == "cash" else "lose_feedback"
-    feedback = make_unit(unit_label="feedback").add_stim(stim_bank.get_and_format(fb_stim, fb_score=fb_score)).show(
+    feedback = make_unit(unit_label="feedback").add_stim(stim_bank.get_and_format(fb_stim, fb_score=fb_score))
+    set_trial_context(
+        feedback,
+        trial_id=trial_id,
+        phase="trial_feedback",
+        deadline_s=settings.feedback_duration,
+        valid_keys=[],
+        block_id=block_id,
+        condition_id=str(condition),
+        task_factors={
+            "condition": str(condition),
+            "stage": "trial_feedback",
+            "fb_type": str(fb_type),
+            "fb_score": float(fb_score),
+            "pump_count": int(pump_count),
+            "block_idx": block_idx,
+        },
+        stim_id=fb_stim,
+    )
+    feedback.show(
         duration=settings.feedback_duration,
         onset_trigger=settings.triggers.get("feedback_onset"),
     )
