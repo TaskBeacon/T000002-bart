@@ -24,7 +24,7 @@ This implementation uses deterministic explosion sampling with config-defined mo
 
 ## 2. Task Flow
 
-![Task flow](./task_flow.png)
+![Task Flow](task_flow.png)
 ### Controller Logic
 
 - `main.py` runs one unified mode-aware flow (`human`, `qa`, `sim`).

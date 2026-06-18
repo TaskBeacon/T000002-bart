@@ -2,6 +2,12 @@
 
 All notable development changes for T000002-bart are documented here.
 
+## [1.1.4] - 2026-06-18
+
+### Changed
+- Normalized the README task-flow image embed to the current task-build contract.
+- Added the contract-preferred `/outputs/.gitkeep` exception to `.gitignore`.
+
 ## [1.1.3] - 2026-03-10
 
 ### Changed

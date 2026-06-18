@@ -3,6 +3,7 @@
 src/__pycache__/
 outputs/*
 !outputs/.gitkeep
+!/outputs/.gitkeep
 outputs/human/
 
 # TaskBeacon housekeeping (generated artifacts)
