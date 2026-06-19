@@ -1,37 +1,42 @@
 # Task Plot Brief
 
-Task: Balloon Analogue Risk Task (BART)
+## Evidence Sources
 
-Goal measured: risk taking and reward-risk tradeoff.
+- `README.md`
+- `main.py`
+- `config/config.yaml`
+- `src/run_trial.py`
+- `src/utils.py`
 
-Primary evidence:
-- `README.md`: task overview, flow, color conditions, and timing.
-- `config/config.yaml`: condition list, reward increments, max pumps, keys, timing, and stimuli.
-- `src/run_trial.py`: participant-visible trial sequence and branch logic.
+## Header
 
-Conditions:
-- Blue balloon: lower reward increment, `+5` per pump, maximum pump profile `24`.
-- Yellow balloon: medium reward increment, `+10` per pump, maximum pump profile `12`.
-- Orange balloon: higher reward increment, `+20` per pump, maximum pump profile `6`.
+- Title: Balloon Analogue Risk Task (BART)
+- Construct: risk taking / decision making
 
-Trial phases:
-- Fixation: `+`, 0.8 s.
-- Pump decision: colored balloon plus temporary score `+{score_bank}`. Participant can press `space` to pump or `right` to cash out.
-- Pump loop: each `space` pump increases temporary reward by the condition increment, grows the balloon, and repeats unless the explosion point is reached.
-- Pop outcome: if pump count reaches the sampled explosion point, show popped balloon and play pop sound for 1.0 s; temporary reward is lost.
-- Cash outcome: if participant presses `right`, show cash-out screen and play cash sound for 1.0 s; temporary reward is banked.
-- Timeout outcome: possible in QA/SIM profiles when timeout is enabled; not enabled for human config.
-- Trial feedback: show earned score for 1.0 s, `0` after pop/timeout or banked score after cash.
+## Participant-Visible Flow
 
-Participant-visible response rule:
-- Press `space` to pump and increase temporary reward.
-- Press `right` to cash out and bank the current temporary reward.
+- Three balloon colors are presented: blue, yellow, and orange.
+- Participant presses `space` to pump and `right` to cash out.
+- Each pump increases temporary reward and balloon size.
+- Pumping can lead to a pop outcome, which loses the temporary reward.
+- Cashing out banks the temporary reward.
+- Trial feedback shows earned score for the trial.
 
-Block context:
-- Human profile: 3 blocks, 10 trials per block, 30 trials total.
-- Conditions are blue, yellow, and orange balloons.
+## Rows
 
-Image simplification:
-- Use three timeline rows: Blue, Yellow, Orange.
-- Show a loop/branch structure for pump/cash/pop rather than drawing every repeated pump.
-- Omit timeout from the main row flow, but include a small QA-only note if space allows.
+- Blue balloon: `+5` per pump, max pump profile `24`.
+- Yellow balloon: `+10` per pump, max pump profile `12`.
+- Orange balloon: `+20` per pump, max pump profile `6`.
+
+## Timings
+
+- Fixation: 0.8 s.
+- Decision window: no practical timeout in human config; participant chooses pump or cash.
+- Cash or pop outcome: 1.0 s.
+- Feedback: 1.0 s.
+
+## Rendering Notes
+
+- Use three rows and a compact pump loop/branch, not every repeated pump.
+- The generated raw image must contain only timeline content below a blank header band.
+- The final title, `Construct: risk taking / decision making` subtitle, and TaskBeacon logo are added by post-processing.
