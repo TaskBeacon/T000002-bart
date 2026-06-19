@@ -2,6 +2,13 @@
 
 All notable development changes for T000002-bart are documented here.
 
+## [Unreleased]
+
+### Changed
+- Moved deterministic explosion-point sampling helpers from `src/run_trial.py` into `src/utils.py`.
+- Updated reference mappings to point at `src/utils.py::sample_explosion_point`.
+- Removed the UTF-8 BOM from `taskbeacon.yaml`.
+
 ## [1.1.4] - 2026-06-18
 
 ### Changed
